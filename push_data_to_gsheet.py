@@ -89,5 +89,3 @@ def push_data(link, sheet_name):
   # Call the update_cells_with_retry function to update the cells
   update_cells_with_retry(sheet, cell_list)
 
-push_data(link)
-

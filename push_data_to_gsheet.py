@@ -12,7 +12,7 @@ Original file is located at
 
 """# Code"""
 
-sh = "day"
+# sh = "day"
 
 import gspread
 from google.oauth2.credentials import Credentials

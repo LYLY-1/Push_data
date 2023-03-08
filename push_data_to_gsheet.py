@@ -41,7 +41,7 @@ def update_cells_with_retry(sheet, cell_list,max_retries=100, initial_backoff=1.
             backoff *= 2
             num_retries += 1
 
-def read_file():
+def read_file(date):
   creds, _ = default()
   gc = gspread.authorize(creds)
   regions = ['HN', 'HCM', 'SOUTH']
@@ -68,7 +68,7 @@ def read_file():
     dfs[i]['QA input time'] = ''
   return dfs
 
-def push_data(link):
+def push_data(link, sheet_name):
   # columns = pd.concat(dfs).columns.tolist()
   dfs = read_file()
   data = pd.concat(dfs).fillna("-").values.tolist()

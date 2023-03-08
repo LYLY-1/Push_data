@@ -7,12 +7,12 @@ Original file is located at
     https://colab.research.google.com/drive/1m200bDQzQjE3dKmHXTLljEFqp_7bPHhU
 """
 
-# date = '3/1/23'
-# link = 'https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=0'
+# start_date = '2023-03-01'
+# end_date = '2023-03-07'
+# link = 'https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=1890386972'
+# sheet_name = 'day'
 
 """# Code"""
-
-# sh = "day"
 
 import gspread
 from google.oauth2.credentials import Credentials
@@ -42,7 +42,6 @@ def update_cells_with_retry(sheet, cell_list,max_retries=100, initial_backoff=1.
             num_retries += 1
 
 def read_file(start_date, end_date):
-  
   creds, _ = default()
   gc = gspread.authorize(creds)
   regions = ['HN', 'HCM', 'SOUTH']
@@ -66,8 +65,9 @@ def read_file(start_date, end_date):
     dfs[i]['Ngày input'] = dfs[i]['Ngày input'].astype(str)
   return dfs
 
-def push_data(start_date, end_date, link, sheet_name):
-  # columns = pd.concat(dfs).columns.tolist()
+# df.shape
+
+def push_data(start_date, end_date, sheet_name, link):
   dfs = read_file(start_date, end_date)
   data = pd.concat(dfs).fillna("-").values.tolist()
   df = pd.concat(dfs)
@@ -85,5 +85,7 @@ def push_data(start_date, end_date, link, sheet_name):
       cell.value = data[i // df.shape[1]][i % df.shape[1]]
 
   # Call the update_cells_with_retry function to update the cells
-  update_cells_with_retry(start_date, end_date, link, sheet_name, sheet, cell_list)
+  update_cells_with_retry(sheet, cell_list)
+
+# push_data(start_date, end_date, sheet_name, link)
 

@@ -68,9 +68,9 @@ def read_file(date):
     dfs[i]['QA input time'] = ''
   return dfs
 
-def push_data(link, sheet_name):
+def push_data(date, link, sheet_name):
   # columns = pd.concat(dfs).columns.tolist()
-  dfs = read_file()
+  dfs = read_file(date)
   data = pd.concat(dfs).fillna("-").values.tolist()
   df = pd.concat(dfs)
   df = df.fillna('-')

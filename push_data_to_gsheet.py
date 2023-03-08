@@ -76,7 +76,7 @@ def push_data(link):
   df = df.fillna('-')
   creds, _ = default()
   gc = gspread.authorize(creds)
-  sheet = gc.open_by_url(link).worksheet(sh)
+  sheet = gc.open_by_url(link).worksheet(sheet_name)
   # sheet.clear()
   cell_list = sheet.range(f'A1:{gspread.utils.rowcol_to_a1(df.shape[0], df.shape[1])}')
 

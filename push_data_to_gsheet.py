@@ -73,7 +73,7 @@ def push_data(dfs):
   df = pd.concat(dfs)
   df = df.fillna('-')
 
-  sheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/12EoEW3hSeZwMfZRzKNJTIVBBgKkFr5B2P84GX-yiWsE/edit#gid=0").worksheet(sh)
+  sheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=1890386972").worksheet(sh)
   # sheet.clear()
   cell_list = sheet.range(f'A1:{gspread.utils.rowcol_to_a1(df.shape[0], df.shape[1])}')
 

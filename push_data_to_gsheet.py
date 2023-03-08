@@ -41,7 +41,8 @@ def update_cells_with_retry(sheet, cell_list,max_retries=100, initial_backoff=1.
             backoff *= 2
             num_retries += 1
 
-def read_file(date):
+def read_file(start_date, end_date):
+  
   creds, _ = default()
   gc = gspread.authorize(creds)
   regions = ['HN', 'HCM', 'SOUTH']
@@ -55,22 +56,19 @@ def read_file(date):
       sheet = gc.open_by_url(link).worksheet(region)
       dfs.append(get_as_dataframe(sheet,evaluate_formulas=True, header=1))
   lst_sheet = ['NVR-FS-HN', 'NVR-FS-HCM', 'NVR-FS-SOUTH', 'Opv2-FS-HN', 'Opv2-FS-HCM', 'Opv2-FS-SOUTH',
-             'NVR-Retail-HN', 'NVR-Retail-HCM', 'NVR-Retail-SOUTH', 'Opv2-Retail-HN', 'Opv2-Retail-HCM', 'Opv2-Retail-SOUTH']
+              'NVR-Retail-HN', 'NVR-Retail-HCM', 'NVR-Retail-SOUTH', 'Opv2-Retail-HN', 'Opv2-Retail-HCM', 'Opv2-Retail-SOUTH']
   for i in range(12):
     dfs[i]['file'] = lst_sheet[i]  
     dfs[i] = dfs[i].loc[~dfs[i]['Mã đơn'].isna()].iloc[1:, :]
-    dfs[i] = dfs[i][['Ngày input',	'Mã đơn',	'Shipper Weight',	'NJV Weight',	'NJV Height',	'NJV Length',
-                    'NJV Width',	'Bằng chứng',	'Xác nhận bằng chứng', 'Lý do bằng chứng không đạt chuẩn',	'Xác nhận bằng chứng.1',	
-                    'Lý do bằng chứng đạt chuẩn',	'Height trên hình',	'Length trên hình',	'Width trên hình',	'Weight trên hình by QA (thập phân là dấu chấm)',	'QA']]
     dfs[i] = dfs[i].rename(columns={'Xác nhận bằng chứng':'Xác nhận bằng chứng SA', 'Xác nhận bằng chứng.1':'Xác nhận bằng chứng (QA)'})
-    dfs[i] = dfs[i][dfs[i]['Ngày input']==date]
-    dfs[i] = dfs[i][dfs[i]['Xác nhận bằng chứng SA']=='Không đạt']
-    dfs[i]['QA input time'] = ''
+    dfs[i]['Ngày input'] = pd.to_datetime(dfs[i]['Ngày input'])
+    dfs[i] = dfs[i][(dfs[i]['Ngày input']>=start_date) & (dfs[i]['Ngày input']<=end_date) ]
+    dfs[i]['Ngày input'] = dfs[i]['Ngày input'].astype(str)
   return dfs
 
-def push_data(date, link, sheet_name):
+def push_data(start_date, end_date, link, sheet_name):
   # columns = pd.concat(dfs).columns.tolist()
-  dfs = read_file(date)
+  dfs = read_file(start_date, end_date)
   data = pd.concat(dfs).fillna("-").values.tolist()
   df = pd.concat(dfs)
   df = df.fillna('-')
@@ -87,5 +85,5 @@ def push_data(date, link, sheet_name):
       cell.value = data[i // df.shape[1]][i % df.shape[1]]
 
   # Call the update_cells_with_retry function to update the cells
-  update_cells_with_retry(sheet, cell_list)
+  update_cells_with_retry(start_date, end_date, link, sheet_name, sheet, cell_list)
 

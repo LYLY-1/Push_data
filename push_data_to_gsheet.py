@@ -7,8 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1m200bDQzQjE3dKmHXTLljEFqp_7bPHhU
 """
 
-date = '3/1/23'
-link = 'https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=0'
+# date = '3/1/23'
+# link = 'https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=0'
 
 """# Code"""
 

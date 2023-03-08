@@ -7,7 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1m200bDQzQjE3dKmHXTLljEFqp_7bPHhU
 """
 
-date = '3/4/23'
+date = '3/1/23'
+link = 'https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=0'
 
 """# Code"""
 
@@ -67,13 +68,15 @@ def read_file():
     dfs[i]['QA input time'] = ''
   return dfs
 
-def push_data(dfs):
+def push_data(link):
   # columns = pd.concat(dfs).columns.tolist()
+  dfs = read_file()
   data = pd.concat(dfs).fillna("-").values.tolist()
   df = pd.concat(dfs)
   df = df.fillna('-')
-
-  sheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/15O2XvhIdSmG45an6Gj6spynLvzBMm3UI63eDutyKPjg/edit#gid=1890386972").worksheet(sh)
+  creds, _ = default()
+  gc = gspread.authorize(creds)
+  sheet = gc.open_by_url(link).worksheet(sh)
   # sheet.clear()
   cell_list = sheet.range(f'A1:{gspread.utils.rowcol_to_a1(df.shape[0], df.shape[1])}')
 
@@ -86,5 +89,5 @@ def push_data(dfs):
   # Call the update_cells_with_retry function to update the cells
   update_cells_with_retry(sheet, cell_list)
 
-
+push_data(link)
 
